@@ -1,13 +1,15 @@
-import {
-  getManagedRestaurant,
-  GetManagedRestaurantResponse,
-} from "@/api/get-managed-restaurant";
-import { updateProfile } from "@/api/update-profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import {
+  getManagedRestaurant,
+  GetManagedRestaurantResponse,
+} from "@/api/get-managed-restaurant";
+import { updateProfile } from "@/api/update-profile";
+
 import { Button } from "./ui/button";
 import {
   DialogClose,
@@ -51,8 +53,8 @@ export function StoreProfileDialog() {
 
   const { mutateAsync: updateProfileFn } = useMutation({
     mutationFn: updateProfile,
-    onMutate({ name, description }) {
-      const { cached } = updateManagedRestaurantCache({ name, description });
+    onMutate({ description, name }) {
+      const { cached } = updateManagedRestaurantCache({ description, name });
 
       return { previousProfile: cached };
     },
@@ -92,9 +94,9 @@ export function StoreProfileDialog() {
         description: data.description,
       });
 
-      toast.success("Perfil atuailzado com sucesso!");
+      toast.success("Perfil atualizado com sucesso!");
     } catch {
-      toast.success("Falha ao atualizar o perfil, tente novamente!");
+      toast.error("Falha ao atualizar o perfil, tente novamente");
     }
   }
 
